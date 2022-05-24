@@ -1,10 +1,13 @@
 certifi==2020.12.5
 click
-Flask
+Flask~=2.1.2
 gunicorn==20.0.4
 itsdangerous
 Jinja2
 MarkupSafe
 Werkzeug
 wincertstore==0.2
-sklearn
+sklearn~=0.0
+numpy~=1.22.4
+scikit-learn~=1.1.1
+pandas~=1.4.2

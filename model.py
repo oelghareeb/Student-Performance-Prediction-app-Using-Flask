@@ -18,15 +18,12 @@ df.iloc[:,1].replace('M', 1,inplace=True)
 
 ### Splitting Data
 
-X = df[['radius_mean', 'texture_mean', 'area_mean', 'concavity_mean',
-       'concave points_mean', 'area_se', 'radius_worst', 'texture_worst',
-       'perimeter_worst', 'area_worst', 'concavity_worst',
-       'concave points_worst', 'symmetry_worst']]
+X = df[['radius_mean','texture_mean','area_mean', 'concavity_mean','concave points_mean','area_se','radius_worst','texture_worst','perimeter_worst','area_worst','concavity_worst','concave points_worst','symmetry_worst']]
 y = df['diagnosis']
 
 from sklearn.model_selection import train_test_split
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.3, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.3, random_state=42)
 
 #### Data Preprocessing
 
@@ -39,21 +36,24 @@ x_test = scaler.transform(X_test)
 
 
 ##
-from sklearn.svm import SVC
-clf_svm = SVC(probability=True)
-clf_svm.fit(x_train, y_train)
-predictions = clf_svm.predict(x_test)
+from sklearn.linear_model import LogisticRegression
+clf_lr = LogisticRegression()
+clf_lr.fit(x_train, y_train)
+predictions = clf_lr.predict(x_test)
 
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 
+
+print("Accuracy Score : \n\n" , accuracy_score(y_test, predictions))
 
 print("Confusion Matrix : \n\n" , confusion_matrix(predictions,y_test))
 
 print("Classification Report : \n\n" , classification_report(predictions,y_test),"\n")
 
 
-pickle.dump(clf_svm, open('model.pkl', 'wb'))
+pickle.dump(clf_lr, open('model.pkl', 'wb'))
 pickle.dump(scaler, open('scaler.pkl', 'wb'))
 
 model = pickle.load(open('model.pkl', 'rb'))

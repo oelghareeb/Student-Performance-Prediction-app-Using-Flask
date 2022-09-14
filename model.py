@@ -11,15 +11,12 @@ import pickle
 warnings.filterwarnings('ignore')
 
 ### Import Datset
-df = pd.read_csv("data_breast-cancer-wiscons.csv")
-# we change the class values (at the column number 2) from B to 0 and from M to 1
-df.iloc[:,1].replace('B', 0,inplace=True)
-df.iloc[:,1].replace('M', 1,inplace=True)
+df = pd.read_csv("student_data.csv")
 
 ### Splitting Data
 
-X = df[['radius_mean','texture_mean','area_mean', 'concavity_mean','concave points_mean','area_se','radius_worst','texture_worst','perimeter_worst','area_worst','concavity_worst','concave points_worst','symmetry_worst']]
-y = df['diagnosis']
+X = df[['absences', 'G1', 'G2']]
+y = df[['G3']]
 
 from sklearn.model_selection import train_test_split
 
@@ -36,25 +33,23 @@ x_test = scaler.transform(X_test)
 
 
 ##
-from sklearn.linear_model import LogisticRegression
-clf_lr = LogisticRegression()
-clf_lr.fit(x_train, y_train)
-predictions = clf_lr.predict(x_test)
+from sklearn.ensemble import RandomForestRegressor
 
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
+rf_reg = RandomForestRegressor(n_estimators=1000)
+rf_reg.fit(X_train, y_train)
+y_pred = rf_reg.predict(X_test)
 
 
-print("Accuracy Score : \n\n" , accuracy_score(y_test, predictions))
+from sklearn.metrics import mean_squared_error,r2_score, mean_absolute_error
 
-print("Confusion Matrix : \n\n" , confusion_matrix(predictions,y_test))
+print("R2 Score :",r2_score(y_test,y_pred))
+print("Mean Squared Error :",mean_squared_error(y_test, y_pred))
+print('Mean Absolute Error :', mean_absolute_error(y_test, y_pred))
+print('Root Mean Squared Error :', np.sqrt(mean_squared_error(y_test, y_pred)))
 
-print("Classification Report : \n\n" , classification_report(predictions,y_test),"\n")
 
-
-pickle.dump(clf_lr, open('model.pkl', 'wb'))
+pickle.dump(rf_reg, open('SP_rf.pkl', 'wb'))
 pickle.dump(scaler, open('scaler.pkl', 'wb'))
 
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('SP_rf.pkl', 'rb'))
 print(model)

@@ -29,7 +29,7 @@ p{
 }
 
 body, html {
-  height: 110%;
+  height: 100%;
   width: 85%;
   margin-left: auto;
   margin-right: auto;
@@ -39,7 +39,7 @@ body, html {
 }
 
 .container_main{
-  height: 140%;
+  height: 100%;
   width: 85%;
   margin-left: auto;
   margin-right: auto;

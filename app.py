@@ -4,7 +4,7 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__,static_url_path='/static')
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('SP_rf.pkl', 'rb'))
 scaler = pickle.load(open('scaler.pkl', 'rb'))
 
 
@@ -14,24 +14,16 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-
-    features = [float(x) for x in request.form.values()]
-    final_features = [np.array(features)]
-    final_features = scaler.transform(final_features)    
-    prediction = model.predict(final_features)
-    y_probabilities_test = model.predict_proba(final_features)
-    y_prob_success = y_probabilities_test[:, 1]
-    print("final features",final_features)
+    Absence = request.form['absences']
+    G1 = request.form['G1']
+    G2 = request.form['G2']
+    prediction = model.predict([[Absence, G1, G2]])
+    print("final features",prediction)
     print("prediction:",prediction)
-    output = round(prediction[0], 2)
-    y_prob=round(y_prob_success[0], 3)
+    output = round(prediction[0])
     print(output)
+    return render_template('index.html',prediction_text='Your Grade 3 Score  {}'.format(output))
 
-    if output == 0:
-        return render_template('index.html', prediction_text='THE PATIENT IS MORE LIKELY TO HAVE A BENIGN CANCER WITH PROBABILITY VALUE  {}'.format(y_prob))
-    else:
-         return render_template('index.html', prediction_text='THE PATIENT IS MORE LIKELY TO HAVE A MALIGNANT CANCER WITH PROBABILITY VALUE  {}'.format(y_prob))
-        
 @app.route('/predict_api',methods=['POST'])
 def predict_api():
 
@@ -42,4 +34,4 @@ def predict_api():
     return jsonify(output)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

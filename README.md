@@ -11,7 +11,7 @@
 
 
 ## Demo
-Link: [No link yet](Still wait for deploy)
+Link: [https://student-performance-prediciton.herokuapp.com/]
 
 [![](https://i.imgur.com/uJ3VTk3.png)]
 
